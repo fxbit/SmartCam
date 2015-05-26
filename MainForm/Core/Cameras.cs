@@ -1,7 +1,4 @@
-﻿using FxMaths.GUI;
-using FxMaths.Images;
-using FxMaths.Matrix;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -11,6 +8,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+
+using Newtonsoft.Json;
+
+using FxMaths.GUI;
+using FxMaths.Images;
+using FxMaths.Matrix;
 
 namespace MainForm.Core
 {
@@ -24,7 +27,8 @@ namespace MainForm.Core
         private int _rate;
         public int Rate { get { return _rate; } }
         public Point Position { get; set; }
-        public float _fps;
+        public Size Size { get; set; }
+        private float _fps;
         public float FPS { get { return _fps; } }
         #endregion
 
@@ -61,8 +65,11 @@ namespace MainForm.Core
         private Boolean _continue = false;
         private ColorMap imageMaskColorMap;
 
+        [JsonIgnore]
         public FxMatrixF image;
+        [JsonIgnore]
         public FxMatrixF result;
+        [JsonIgnore]
         public FxMatrixMask imageMask;
         #endregion
 

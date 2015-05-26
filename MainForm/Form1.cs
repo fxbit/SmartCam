@@ -49,7 +49,8 @@ namespace MainForm
 
 
         public static SmartCam.SmartCamClient smartCamClient;
-        public static Image plan;
+        public static Image PlanImage;
+        public static String ShopName;
 
         #region Form
         public MainForm()
@@ -76,20 +77,35 @@ namespace MainForm
             // Init serial Capture menu
             UISerialCapture = new SerialCapture();
             UISerialCapture.Show(dockPanel1, DockState.Document);
-
+            UISerialCapture.onUpdatedCameras += UISerialCapture_UpdatedCameras;
+            
 
             // Init client connection
-
             smartCamClient = new SmartCamClient("localhost");
             smartCamClient.Connect();
 
 
-            plan = new Bitmap("Katopsi.jpg");
+
+
+            // Send the event to server
+            ShopName = "Unisol 1";
+            PlanImage = new Bitmap("Katopsi.jpg");
             smartCamClient.SendShop(new Shop()
                 {
-                    Name = "Katastima 1",
-                    Plan = plan
-                });
+                    Name = ShopName,
+                    Plan = PlanImage,
+                    Cameras = UISerialCapture.GetCameras()
+                }, false);
+        }
+
+        void UISerialCapture_UpdatedCameras(object sender, EventArgs e)
+        {
+            smartCamClient.SendShop(new Shop()
+            {
+                Name = ShopName,
+                Plan = PlanImage,
+                Cameras = UISerialCapture.GetCameras()
+            }, true);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -163,7 +179,7 @@ namespace MainForm
 
         private void peopleRefreshCB(PeopleSimulation ps)
         {
-            
+
             /* now we must update People Overview */
             if (UIPeopleOverview != null)
                 UIPeopleOverview.PeopleUpdate(ps.PersonList);
@@ -176,7 +192,7 @@ namespace MainForm
                     heatMap = katopsi.Copy();
                 }
 
-                foreach(Person p in ps.PersonList)
+                foreach (Person p in ps.PersonList)
                 {
                     heatMap.DrawCircle(p.Position, 10.0f, 0.5f);
                 }
@@ -188,13 +204,19 @@ namespace MainForm
 
             refreshCount++;
 
+            /* Send event to server */
+            var listPersons = new List<PersonSimple>();
+            foreach (Person p in ps.PersonList)
+            {
+                listPersons.Add(new PersonSimple()
+                {
+                    Direction = new PointF(p.Direction.x, p.Direction.y),
+                    Position = new PointF(p.Position.x, p.Position.y)
+                });
+            }
+            smartCamClient.SendListPersons(listPersons);
+            
         }
-
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-            peopleSimulation = new PeopleSimulation(20, new FxVector2f(560,145), new FxVector2f(-1,0), katopsi);
-            peopleSimulation.Start(peopleRefreshCB);
-        } 
 
         #endregion
 
@@ -207,6 +229,18 @@ namespace MainForm
 
             if (UISerialCapture != null)
                 UISerialCapture.Stop();
+        }
+
+
+
+        private void simulationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            if (peopleSimulation != null)
+                peopleSimulation.Stop();
+
+            peopleSimulation = new PeopleSimulation(10, new FxVector2f(560, 145), new FxVector2f(-1, 0), katopsi);
+            peopleSimulation.Start(peopleRefreshCB);
         }
     }
 }

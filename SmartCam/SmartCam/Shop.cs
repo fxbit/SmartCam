@@ -21,6 +21,17 @@ namespace SmartCam
         /// </summary>
         public String Name;
 
+        /// <summary>
+        /// List with all cameras tha the shop have.
+        /// </summary>
+        public List<Camera> Cameras;
 
+
+
+
+        public Shop()
+        {
+            Cameras = new List<Camera>();
+        }
     }
 }

@@ -60,7 +60,7 @@ namespace MainForm
 
         private void SimulationRun()
         {
-            int dt_ms = 50;
+            int dt_ms = 100;
             int newPersonCounter = 0;
             FxVector2f filded = new FxVector2f();
             while (simulationRun)
@@ -83,7 +83,7 @@ namespace MainForm
                 foreach (var person in PersonList)
                 {
                     float speedChange = 1 + (rand.Next(100) > 50 ? -0.1f : +0.1f) * rand.Next(1000) / 1000.0f;
-                    float directionAngleChange = (rand.Next(100) > 50 ? -1 : +1) * (float)(rand.NextDouble() * Math.PI/8.0f);
+                    float directionAngleChange = (rand.Next(100) > 50 ? -1 : +1) * (float)(rand.NextDouble() * Math.PI / 8.0f);
 
                     // move person
                     // check the person position and moving
@@ -127,7 +127,8 @@ namespace MainForm
                 }
 
                 // call all upper layers about the refresh states
-                PsrList(this);
+                if (PsrList != null)
+                    PsrList(this);
 
                 // delay the next frame
                 Thread.Sleep(dt_ms);
@@ -154,7 +155,7 @@ namespace MainForm
 
         public void Stop()
         {
-            if(simulationThread!=null)
+            if (simulationThread != null)
             {
                 simulationRun = false;
                 simulationThread.Abort();

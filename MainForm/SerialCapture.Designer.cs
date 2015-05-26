@@ -30,18 +30,18 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SerialCapture));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButton_save = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton_plus = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton_minus = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripLabel_fps = new System.Windows.Forms.ToolStripLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.canvas1 = new FxMaths.GUI.Canvas();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButton_save = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripLabel_fps = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -69,6 +69,22 @@
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // toolStripButton_save
+            // 
+            this.toolStripButton_save.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton_save.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_save.Image")));
+            this.toolStripButton_save.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton_save.Name = "toolStripButton_save";
+            this.toolStripButton_save.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButton_save.Text = "toolStripButton1";
+            this.toolStripButton_save.ToolTipText = "Save";
+            this.toolStripButton_save.Click += new System.EventHandler(this.toolStripButton_save_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
             // toolStripButton_plus
             // 
             this.toolStripButton_plus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -90,6 +106,23 @@
             this.toolStripButton_minus.Text = "toolStripButton2";
             this.toolStripButton_minus.ToolTipText = "Remove";
             this.toolStripButton_minus.Click += new System.EventHandler(this.toolStripButton_minus_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(29, 22);
+            this.toolStripLabel1.Text = "FPS:";
+            // 
+            // toolStripLabel_fps
+            // 
+            this.toolStripLabel_fps.Name = "toolStripLabel_fps";
+            this.toolStripLabel_fps.Size = new System.Drawing.Size(13, 22);
+            this.toolStripLabel_fps.Text = "0";
             // 
             // splitContainer1
             // 
@@ -154,39 +187,6 @@
             this.propertyGrid1.TabIndex = 0;
             this.propertyGrid1.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid1_PropertyValueChanged);
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripButton_save
-            // 
-            this.toolStripButton_save.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton_save.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_save.Image")));
-            this.toolStripButton_save.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton_save.Name = "toolStripButton_save";
-            this.toolStripButton_save.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton_save.Text = "toolStripButton1";
-            this.toolStripButton_save.ToolTipText = "Save";
-            this.toolStripButton_save.Click += new System.EventHandler(this.toolStripButton_save_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
-            // 
-            // toolStripLabel1
-            // 
-            this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(29, 22);
-            this.toolStripLabel1.Text = "FPS:";
-            // 
-            // toolStripLabel_fps
-            // 
-            this.toolStripLabel_fps.Name = "toolStripLabel_fps";
-            this.toolStripLabel_fps.Size = new System.Drawing.Size(13, 22);
-            this.toolStripLabel_fps.Text = "0";
-            // 
             // SerialCapture
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -197,6 +197,7 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.Name = "SerialCapture";
             this.Text = "SerialCapture";
+            this.Load += new System.EventHandler(this.SerialCapture_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);

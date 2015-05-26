@@ -28,6 +28,8 @@ namespace MainForm
         private FxMatrixMask imageMask;
         public ColorMap imageMaskColorMap;
 
+        public event EventHandler onUpdatedCameras = null;
+
         public SerialCapture()
         {
             InitializeComponent();
@@ -75,6 +77,9 @@ namespace MainForm
 
             // Start the streaming
             cam.Start();
+
+            if (onUpdatedCameras != null)
+                onUpdatedCameras(this, new EventArgs());
         }
 
 
@@ -87,6 +92,10 @@ namespace MainForm
 
 
                 listBox1.Items.Remove(listBox1.SelectedItem);
+
+
+                if (onUpdatedCameras != null)
+                    onUpdatedCameras(this, new EventArgs());
             }
         } 
         #endregion
@@ -163,6 +172,12 @@ namespace MainForm
             // Update fps
             toolStripLabel_fps.Text = cam.FPS.ToString();
 
+
+            // TODO: Add here the detection algorithm
+
+
+
+            // Refresh the view
             canvas1.ReDraw();
         }
 
@@ -175,6 +190,29 @@ namespace MainForm
             {
                 c.Stop();
             }
+        }
+
+        private void SerialCapture_Load(object sender, EventArgs e)
+        {
+
+        }
+
+
+        public List<SmartCam.Camera> GetCameras()
+        {
+            var cameras = new List<SmartCam.Camera>();
+
+            foreach(Cameras cam in listBox1.Items)
+            {
+                cameras.Add(new SmartCam.Camera()
+                    {
+                        Center = cam.Position,
+                        Name = cam.CameraName,
+                        Size = cam.Size
+                    });
+            }
+
+            return cameras;
         }
     }
 }

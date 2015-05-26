@@ -24,6 +24,12 @@ namespace SmartCam
         public delegate void OnNewMsgHandler(MsgType Type, Shop Shop);
         public event OnNewMsgHandler OnNewMsg = null;
 
+        public delegate void OnUpdatePersonsListHandler(Shop Shop, List<PersonSimple> listPersons);
+        public event OnUpdatePersonsListHandler OnUpdatePersonsList = null;
+
+        public delegate void OnUpdateCamerasHandler(Shop Shop, List<CameraPeoples> listCameras);
+        public event OnUpdateCamerasHandler OnUpdateCameras = null;
+
         //------------------------------------------------------------------------------------------------------------------------
 
         public SmartCamListener()
@@ -78,13 +84,42 @@ namespace SmartCam
 
                     switch (msg.Type)
                     {
+                        case MsgType.ShopUpdate:
                         case MsgType.ShopConnected:
                             listener.shop = (Shop)listener.formatter.Deserialize(listener.stream);
                             break;
-                        case MsgType.PeopleList:
+                        // --------------------------------------------------------------------------------
+                        case MsgType.PersonsUpdate:
+                            List<PersonSimple> p;
+                            if (msg.MsgSize > 0)
+                            {
+                                p = (List<PersonSimple>)listener.formatter.Deserialize(listener.stream);
+                            }
+                            else
+                            {
+                                p = new List<PersonSimple>();
+                            }
+
+                            if (OnUpdatePersonsList != null)
+                                OnUpdatePersonsList(listener.shop, p);
                             break;
-                        case MsgType.CameraUpdate:
+                        // --------------------------------------------------------------------------------
+                        case MsgType.CamerasUpdate:
+                            List<CameraPeoples> c;
+                            if (msg.MsgSize > 0)
+                            {
+                                c = (List<CameraPeoples>)listener.formatter.Deserialize(listener.stream);
+                            }
+                            else
+                            {
+                                c = new List<CameraPeoples>();
+                            }
+
+                            if (OnUpdateCameras != null)
+                                OnUpdateCameras(listener.shop, c);
+
                             break;
+                        // --------------------------------------------------------------------------------
                         default:
                             break;
                     }
@@ -95,7 +130,7 @@ namespace SmartCam
                         OnNewMsg(msg.Type, listener.shop);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // Send signal of disconnection
                 if (OnNewMsg != null)

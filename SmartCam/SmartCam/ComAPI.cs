@@ -11,8 +11,9 @@ namespace SmartCam
     {
         ShopConnected,
         ShopDisconnected,
-        PeopleList,
-        CameraUpdate
+        PersonsUpdate,
+        CamerasUpdate,
+        ShopUpdate
     }
 
     [Serializable]

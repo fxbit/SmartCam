@@ -1,14 +1,17 @@
 ﻿using FxMaths.Vector;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SmartCam
 {
-    public class SimplePerson
+    [Serializable]
+    public class PersonSimple
     {
-        public FxVector2f Position;
+        public PointF Position;
+        public PointF Direction;
     }
 }

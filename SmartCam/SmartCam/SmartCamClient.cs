@@ -61,15 +61,15 @@ namespace SmartCam
 
         //------------------------------------------------------------------------------------------------------------------------
 
-        public Boolean SendShop(Shop shop)
+        public Boolean SendShop(Shop shop, Boolean Update)
         {
-            lock(this)
+            lock (this)
             {
                 if (sock.Connected)
                 {
                     // Send the first message
                     FirstMsg fm = new FirstMsg();
-                    fm.Type = MsgType.ShopConnected;
+                    fm.Type = (Update) ? MsgType.ShopUpdate : MsgType.ShopConnected;
                     fm.MsgSize = 0;
                     formatter.Serialize(stream, fm);
 
@@ -84,6 +84,58 @@ namespace SmartCam
 
             }
         }
+
+        //------------------------------------------------------------------------------------------------------------------------
+
+        public Boolean SendListPersons(List<PersonSimple> listPersons)
+        {
+            lock (this)
+            {
+                if (sock.Connected)
+                {
+                    // Send the first message
+                    FirstMsg fm = new FirstMsg();
+                    fm.Type = MsgType.PersonsUpdate;
+                    fm.MsgSize = listPersons.Count;
+                    formatter.Serialize(stream, fm);
+
+                    // Send the Shop
+                    if (listPersons.Count > 0)
+                        formatter.Serialize(stream, listPersons);
+
+                    return true;
+                }
+                else
+                    return false;
+            }
+        }
+
+
+        //------------------------------------------------------------------------------------------------------------------------
+
+        public Boolean SendCamerasUpdate(List<CameraPeoples> peoples)
+        {
+            lock (this)
+            {
+                if (sock.Connected)
+                {
+                    // Send the first message
+                    FirstMsg fm = new FirstMsg();
+                    fm.Type = MsgType.CamerasUpdate;
+                    fm.MsgSize = peoples.Count;
+                    formatter.Serialize(stream, fm);
+
+                    // Send the Shop
+                    if (peoples.Count > 0)
+                        formatter.Serialize(stream, peoples);
+
+                    return true;
+                }
+                else
+                    return false;
+            }
+        }
+
 
         //------------------------------------------------------------------------------------------------------------------------
 
