@@ -96,6 +96,8 @@ namespace MainForm
                         if (valueNext > 0.9f)
                         {
                             // calculate next position
+                            if (person.Path.Count>100)
+                                person.Path = person.Path.Skip(person.Path.Count - 100).ToList();
                             person.Path.Add(nextPosition);
 
                             // calculate the position with kalman to pe more smooth the transaction
@@ -107,6 +109,8 @@ namespace MainForm
                             filded.y = person.kalmanY.Update(nextPosition.y, dt_ms);
 #endif
                             person.Position = filded;
+                            if (person.PathKalman.Count > 100)
+                                person.PathKalman = person.PathKalman.Skip(person.PathKalman.Count - 100).ToList();
                             person.PathKalman.Add(filded);
                         }
                         else
