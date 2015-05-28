@@ -205,11 +205,12 @@ namespace MainForm
             refreshCount++;
 
             /* Send event to server */
-            var listPersons = new List<PersonSimple>();
-            foreach (Person p in ps.PersonList)
+            var listPersons = new List<SmartCam.Person>();
+            foreach (var p in ps.PersonList)
             {
-                listPersons.Add(new PersonSimple()
+                listPersons.Add(new SmartCam.Person()
                 {
+                    Guid = p.Guid,
                     Direction = new PointF(p.Direction.x, p.Direction.y),
                     Position = new PointF(p.Position.x, p.Position.y)
                 });

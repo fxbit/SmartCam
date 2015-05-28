@@ -32,6 +32,6 @@ namespace SmartCam
     public class CameraPeoples
     {
         public Camera Camera;
-        public List<PersonSimple> Persons;
+        public List<Person> Persons;
     }
 }

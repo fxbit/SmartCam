@@ -26,12 +26,15 @@ namespace SmartCam
         /// </summary>
         public List<Camera> Cameras;
 
-
-
+        /// <summary>
+        /// List with all persons in the shop.
+        /// </summary>
+        public List<Person> Persons;
 
         public Shop()
         {
             Cameras = new List<Camera>();
+            Persons = new List<Person>();
         }
     }
 }

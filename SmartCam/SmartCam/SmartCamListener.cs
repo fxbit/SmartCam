@@ -24,7 +24,7 @@ namespace SmartCam
         public delegate void OnNewMsgHandler(MsgType Type, Shop Shop);
         public event OnNewMsgHandler OnNewMsg = null;
 
-        public delegate void OnUpdatePersonsListHandler(Shop Shop, List<PersonSimple> listPersons);
+        public delegate void OnUpdatePersonsListHandler(Shop Shop);
         public event OnUpdatePersonsListHandler OnUpdatePersonsList = null;
 
         public delegate void OnUpdateCamerasHandler(Shop Shop, List<CameraPeoples> listCameras);
@@ -90,18 +90,40 @@ namespace SmartCam
                             break;
                         // --------------------------------------------------------------------------------
                         case MsgType.PersonsUpdate:
-                            List<PersonSimple> p;
+                            List<Person> list;
                             if (msg.MsgSize > 0)
                             {
-                                p = (List<PersonSimple>)listener.formatter.Deserialize(listener.stream);
+                                list = (List<Person>)listener.formatter.Deserialize(listener.stream);
                             }
                             else
                             {
-                                p = new List<PersonSimple>();
+                                list = new List<Person>();
                             }
 
+                            // Merge the persons and remove the ones that have be removed
+                            List<Person> newList = new List<Person>();
+                            foreach (var p in list)
+                            {
+                                var per = listener.shop
+                                    .Persons
+                                    .FirstOrDefault(x => x.Guid == p.Guid);
+
+                                if (per != null)
+                                {
+                                    per.UpdatePerson(p);
+                                    newList.Add(per);
+                                }
+                                else
+                                {
+                                    newList.Add(p);
+                                }
+                            }
+                            listener.shop.Persons = newList;
+
+
+                            // Send the signal to the user
                             if (OnUpdatePersonsList != null)
-                                OnUpdatePersonsList(listener.shop, p);
+                                OnUpdatePersonsList(listener.shop);
                             break;
                         // --------------------------------------------------------------------------------
                         case MsgType.CamerasUpdate:

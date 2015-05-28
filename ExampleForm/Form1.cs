@@ -45,11 +45,11 @@ namespace ExampleForm
 
         //------------------------------------------------------------------------------------------------------------------------
 
-        void SmartCam_OnUpdatePersonsList(Shop Shop, List<PersonSimple> listPersons)
+        void SmartCam_OnUpdatePersonsList(Shop Shop)
         {
             listBox1.Invoke(() =>
             {
-                listBox1.Items.Add(String.Format("Update list persons {0} for shop {1}", listPersons.Count, Shop.Name));
+                listBox1.Items.Add(String.Format("Update list persons {0} for shop {1}", Shop.Persons.Count, Shop.Name));
             });
         }
         

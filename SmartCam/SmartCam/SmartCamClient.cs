@@ -76,7 +76,6 @@ namespace SmartCam
                     // Send the Shop
                     formatter.Serialize(stream, shop);
 
-
                     return true;
                 }
                 else
@@ -87,7 +86,7 @@ namespace SmartCam
 
         //------------------------------------------------------------------------------------------------------------------------
 
-        public Boolean SendListPersons(List<PersonSimple> listPersons)
+        public Boolean SendListPersons(List<Person> listPersons)
         {
             lock (this)
             {
