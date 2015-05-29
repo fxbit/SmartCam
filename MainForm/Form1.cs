@@ -44,8 +44,12 @@ namespace MainForm
 
 
         public static FxMatrixF katopsi = null;
+        public static FxMatrixF ikatopsi = null;
+        public static FxMatrixMask katopsiMask = null;
         public static FxMatrixF heatMap = null;
-
+        public static FxMatrixF katopsiHeatMap = null;
+        public static FxImages heatImage;
+        public static Bitmap heatBitmap;
 
 
         public static SmartCam.SmartCamClient smartCamClient;
@@ -58,6 +62,11 @@ namespace MainForm
             InitializeComponent();
 
             katopsi = FxMatrixF.Load("Katopsi.jpg", FxMaths.Matrix.ColorSpace.Grayscale);
+            katopsiMask = katopsi > 0.8f;
+            ikatopsi = -1 * (katopsi - 1);
+
+            heatBitmap = new System.Drawing.Bitmap(katopsi.Width, katopsi.Height);
+            heatImage = FxMaths.Images.FxTools.FxImages_safe_constructors(heatBitmap);
 
             // init the console
             UIConsole = new ConsoleOutput();
@@ -176,7 +185,7 @@ namespace MainForm
         #region Simulator
 
         int refreshCount = 0;
-
+        ColorMap heatColorMap = new ColorMap(ColorMapDefaults.Jet);
         private void peopleRefreshCB(PeopleSimulation ps)
         {
 
@@ -185,24 +194,36 @@ namespace MainForm
                 UIPeopleOverview.PeopleUpdate(ps.PersonList);
 
             /* create a heet map */
-            if (refreshCount < 10)
             {
-                if (refreshCount == 0)
-                {
-                    heatMap = katopsi.Copy();
-                }
+                FxMatrixF mask = new FxMatrixF(katopsi.Width, katopsi.Height);
+                float a = 0.98f;
 
+
+                // Create a map with persons
                 foreach (Person p in ps.PersonList)
                 {
-                    heatMap.DrawCircle(p.Position, 10.0f, 0.5f);
+                    mask.FillCircle(p.Position, 15.0f, 1 - a);
                 }
-            }
-            else
-            {
-                refreshCount = 0;
-            }
 
-            refreshCount++;
+                if (null == (heatMap as object))
+                    heatMap = mask;
+                else
+                    heatMap = heatMap * a + mask;
+
+                katopsiHeatMap = ikatopsi.Copy();
+                katopsiHeatMap[katopsiMask] = heatMap / heatMap.Max();
+
+                UIPeopleOverview.HeatMapUpdate(katopsiHeatMap);
+
+                // Send it every 10 frames ~= 1Sec
+                if (refreshCount > 10)
+                {
+                    heatImage.Load(katopsiHeatMap, heatColorMap);
+                    smartCamClient.SendHeatMap(heatBitmap);
+                    refreshCount = 0;
+                }
+                refreshCount++;
+            }
 
             /* Send event to server */
             var listPersons = new List<SmartCam.Person>();

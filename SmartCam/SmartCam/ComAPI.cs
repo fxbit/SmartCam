@@ -13,7 +13,8 @@ namespace SmartCam
         ShopDisconnected,
         PersonsUpdate,
         CamerasUpdate,
-        ShopUpdate
+        ShopUpdate,
+        HeatMapUpdate
     }
 
     [Serializable]

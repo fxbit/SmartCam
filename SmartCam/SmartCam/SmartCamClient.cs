@@ -138,5 +138,27 @@ namespace SmartCam
 
         //------------------------------------------------------------------------------------------------------------------------
 
+
+        public bool SendHeatMap(Image HeatMap)
+        {
+            lock (this)
+            {
+                if (sock.Connected)
+                {
+                    // Send the first message
+                    FirstMsg fm = new FirstMsg();
+                    fm.Type = MsgType.HeatMapUpdate;
+                    fm.MsgSize = 0;
+                    formatter.Serialize(stream, fm);
+
+                    // Send the heatMap
+                    formatter.Serialize(stream, HeatMap);
+
+                    return true;
+                }
+                else
+                    return false;
+            }
+        }
     }
 }

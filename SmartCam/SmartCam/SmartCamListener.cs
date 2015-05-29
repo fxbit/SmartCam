@@ -142,6 +142,11 @@ namespace SmartCam
 
                             break;
                         // --------------------------------------------------------------------------------
+                        case MsgType.HeatMapUpdate:
+                            Image HeatMap = (Image)listener.formatter.Deserialize(listener.stream);
+                            listener.shop.Heat = HeatMap;
+                            break;
+                        // --------------------------------------------------------------------------------
                         default:
                             break;
                     }

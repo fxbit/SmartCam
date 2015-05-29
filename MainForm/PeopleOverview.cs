@@ -20,6 +20,7 @@ namespace MainForm
     public partial class PeopleOverview : DockContent
     {
         GeometryPlotElement gpe;
+        ImageElement heat;
 
         public PeopleOverview()
         {
@@ -47,6 +48,15 @@ namespace MainForm
             gpe.Name = "People";
             gpe.lockMoving = true;
             canvas1.AddElement(gpe);
+
+
+            // Add heat map
+            heat = new ImageElement(im, new ColorMap(ColorMapDefaults.Jet));
+            heat.Name = "Heat";
+            heat.lockMoving = true;
+            heat.Position = new FxMaths.Vector.FxVector2f(0, ie.Size.y);
+            canvas1.AddElement(heat);
+
 
         }
 
@@ -80,6 +90,13 @@ namespace MainForm
 
             gpe.ReDraw();
             
+        }
+
+
+        public ColorMap heatMap = new ColorMap(ColorMapDefaults.Jet);
+        public void HeatMapUpdate(FxMatrixF h)
+        {
+            heat.UpdateInternalImage(h, heatMap); ;
         }
     }
 }

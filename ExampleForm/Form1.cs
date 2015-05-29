@@ -73,6 +73,13 @@ namespace ExampleForm
                         pictureBox1.BackgroundImage = Shop.Plan;
                     });
                     break;
+                case MsgType.HeatMapUpdate:
+                    listBox1.Invoke(() =>
+                    {
+                        listBox1.Items.Add(String.Format("Updated Heat from shop {0}", Shop.Name));
+                        pictureBox_heatmap.BackgroundImage = Shop.Heat;
+                    });
+                    break;
                 default:
                     break;
             }

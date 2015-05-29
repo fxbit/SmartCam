@@ -16,6 +16,12 @@ namespace SmartCam
         /// </summary>
         public Image Plan;
 
+
+        /// <summary>
+        /// The heat image of the shop.
+        /// </summary>
+        public Image Heat;
+
         /// <summary>
         /// The name of the shop
         /// </summary>
