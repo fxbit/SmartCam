@@ -23,10 +23,12 @@ namespace MainForm
     {
         const string FileName = "cameras.json";
 
-        private ImageElement imageMaskView;
-        private ImageElement imageView;
         private FxMatrixMask imageMask;
         public ColorMap imageMaskColorMap;
+
+        private Dictionary<Cameras, ImageElement> imageMaskViews = new Dictionary<Cameras, ImageElement>();
+        private Dictionary<Cameras, ImageElement> imageViews = new Dictionary<Cameras, ImageElement>();
+        float NewImagePosition = 0;
 
         public event EventHandler onUpdatedCameras = null;
 
@@ -34,23 +36,12 @@ namespace MainForm
         {
             InitializeComponent();
 
-            LoadConfigurations();
-
-
+            // Init the mask and colormap
             imageMask = new FxMatrixMask(64, 64);
             imageMaskColorMap = new ColorMap(ColorMapDefaults.Jet);
 
-
-            // Create a visual view
-            imageMaskView = new ImageElement(imageMask.ToFxMatrixF(), imageMaskColorMap);
-            canvas1.AddElement(imageMaskView, false);
-
-            imageView = new ImageElement(imageMask.ToFxMatrixF(), imageMaskColorMap);
-            imageView._Position.x = imageMaskView.Size.X + 10f;
-            imageView._Position.Y = 0;
-            canvas1.AddElement(imageView, false);
-
-            canvas1.FitView();
+            // Load default configurations
+            LoadConfigurations();
         }
 
 
@@ -73,6 +64,11 @@ namespace MainForm
                 Position = new Point(),
             };
 
+            AddCamera(cam);
+        }
+
+        private void AddCamera(Cameras cam)
+        {
             listBox1.Items.Add(cam);
 
             // Start the streaming
@@ -80,8 +76,27 @@ namespace MainForm
 
             if (onUpdatedCameras != null)
                 onUpdatedCameras(this, new EventArgs());
-        }
 
+            // Create a new image viewer for this camera
+            // and link it with dictionary 
+            {
+                var imageMaskView = new ImageElement(imageMask.ToFxMatrixF(), imageMaskColorMap);
+                imageMaskView.Position = new FxMaths.Vector.FxVector2f(0, NewImagePosition);
+                NewImagePosition += imageMaskView.Size.Y + 10f /* Offset */;
+                canvas1.AddElement(imageMaskView, false);
+                imageMaskViews.Add(cam, imageMaskView);
+
+
+                var imageView = new ImageElement(imageMask.ToFxMatrixF(), imageMaskColorMap);
+                imageView._Position.x = imageMaskView.Position.X + imageMaskView.Size.X + 10f  /* Offset */;
+                imageView._Position.Y = imageMaskView.Position.Y;
+                canvas1.AddElement(imageView, false);
+                imageViews.Add(cam, imageView);
+
+                canvas1.FitView();
+                canvas1.ReDraw();
+            }
+        }
 
         private void toolStripButton_minus_Click(object sender, EventArgs e)
         {
@@ -96,6 +111,28 @@ namespace MainForm
 
                 if (onUpdatedCameras != null)
                     onUpdatedCameras(this, new EventArgs());
+
+
+                // Remove the old image viewers
+                try
+                {
+                    var maskView = imageMaskViews[c];
+                    imageMaskViews.Remove(c);
+                    canvas1.RemoveElement(maskView, false);
+
+
+                    var view = imageViews[c];
+                    imageViews.Remove(c);
+                    canvas1.RemoveElement(view, false);
+
+
+                    canvas1.FitView();
+                    canvas1.ReDraw();
+                }
+                catch(Exception ex)
+                {
+                    System.Diagnostics.Trace.WriteLine(ex.Message);
+                }
             }
         } 
         #endregion
@@ -152,12 +189,9 @@ namespace MainForm
                 string str = File.ReadAllText(FileName);
                 var list = JsonConvert.DeserializeObject<List<Cameras>>(str);
                 listBox1.Items.Clear();
-
-
+                
                 foreach (var c in list)
-                    c.Start();
-
-                listBox1.Items.AddRange(list.ToArray());
+                    AddCamera(c);
             }
         }
 
@@ -168,6 +202,10 @@ namespace MainForm
         void cam_onImageRecv(object sender, EventArgs e)
         {
             Cameras cam = sender as Cameras;
+
+            // Update the recv images
+            var imageMaskView = imageMaskViews[cam];
+            var imageView = imageViews[cam];
 
             // Update the image viewer
             imageMaskView.UpdateInternalImage(cam.image, imageMaskColorMap);
