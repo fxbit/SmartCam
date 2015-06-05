@@ -19,84 +19,122 @@ namespace MainForm
 {
     public partial class PeopleOverview : DockContent
     {
-        GeometryPlotElement gpe;
+        // -------------------------------------------------------------------------------------------------------------------------------
+
+        GeometryPlotElement peoples;
+        GeometryPlotElement cameras;
+
         ImageElement heat;
-        ImageElement ie;
+        public ColorMap heatMap = new ColorMap(ColorMapDefaults.Jet);
+
+        ImageElement plan;
+        public ColorMap planMap = new ColorMap(ColorMapDefaults.Bones);
+
+        // -------------------------------------------------------------------------------------------------------------------------------
 
         public PeopleOverview()
         {
             InitializeComponent();
 
-            gpe = new GeometryPlotElement();
-            gpe.Name = "People";
-            gpe.lockMoving = true;
-            canvas1.AddElement(gpe);
+            peoples = new GeometryPlotElement();
+            peoples.Name = "People";
+            peoples.lockMoving = true;
+            canvas1.AddElement(peoples, false);
 
+
+            cameras = new GeometryPlotElement();
+            cameras.Name = "Cameras";
+            cameras.lockMoving = true;
+            canvas1.AddElement(cameras, false);
         }
+
+        // -------------------------------------------------------------------------------------------------------------------------------
 
         public PeopleOverview(FxMatrixF im)
         {
             InitializeComponent();
 
             // add building 
-            ie = new ImageElement(im, ColorMap.GetColorMap(ColorMapDefaults.Bones));
-            ie.Name = "Katopsi";
-            ie.lockMoving = true;
-            canvas1.AddElement(ie);
+            plan = new ImageElement(im, new ColorMap(ColorMapDefaults.Bones));
+            plan.Name = "Katopsi";
+            plan.lockMoving = true;
+            canvas1.AddElement(plan);
 
             // add geometry plot
-            gpe = new GeometryPlotElement();
-            gpe.Name = "People";
-            gpe.lockMoving = true;
-            canvas1.AddElement(gpe);
+            peoples = new GeometryPlotElement();
+            peoples.Name = "People";
+            peoples.lockMoving = true;
+            canvas1.AddElement(peoples);
 
+
+            cameras = new GeometryPlotElement();
+            cameras.Name = "Cameras";
+            cameras.lockMoving = true;
+            canvas1.AddElement(cameras, false);
 
             // Add heat map
             heat = new ImageElement(im, ColorMap.GetColorMap(ColorMapDefaults.Jet));
             heat.Name = "Heat";
             heat.lockMoving = true;
-            heat.Position = new FxMaths.Vector.FxVector2f(0, ie.Size.y);
+            heat.Position = new FxMaths.Vector.FxVector2f(0, plan.Size.y);
             canvas1.AddElement(heat);
-
-
-        }
-
-        private void PeopleOverview_Load(object sender, EventArgs e)
-        {
-
         }
         
         internal void UpdateKatopsi(FxMatrixF newKatopsi)
         {
-            ie.UpdateInternalImage(newKatopsi, ColorMap.GetColorMap(ColorMapDefaults.Bones));
+            plan.UpdateInternalImage(newKatopsi, ColorMap.GetColorMap(ColorMapDefaults.Bones));
         }
 
         public void PeopleUpdate(List<Person> personsList)
         {
             // remove all the old geometry
-            gpe.ClearGeometry(false);
+            peoples.ClearGeometry(false);
 
             // add all persons
             foreach (Person p in personsList)
             {
                 // simulation path
                 Path pa = new Path(p.Path);
-                gpe.AddGeometry(pa, false);
+                peoples.AddGeometry(pa, false);
 
                 // with kalman
                 pa = new Path(p.PathKalman);
                 pa.LineColor = SharpDX.Color.Red;
                 pa.UseDefaultColor = false;
-                gpe.AddGeometry(pa, false);
+                peoples.AddGeometry(pa, false);
 
                 // the circle
                 Circle c = new Circle(p.Position, 10);
-                gpe.AddGeometry(c, false);
+                peoples.AddGeometry(c, false);
             }
 
-            gpe.ReDraw();
+            peoples.ReDraw();
             
         }
+
+        // -------------------------------------------------------------------------------------------------------------------------------
+
+        public void CamerasUpdate(List<Camera> cameraList)
+        {
+            // remove all the old geometry
+            cameras.ClearGeometry(false);
+
+            // add all cameras
+            foreach(Camera c in cameraList)
+            {
+                // calc start/end
+                var start = new FxMaths.Vector.FxVector2f(c.Center.X - c.Size.Width / 2, c.Center.Y - c.Size.Height / 2);
+                var end = new FxMaths.Vector.FxVector2f(c.Center.X + c.Size.Width / 2, c.Center.Y + c.Size.Height / 2);
+
+                // Add  to the geometry but not redraw
+                var rect = new FxMaths.Geometry.Rectangle(start, end);
+                cameras.AddGeometry(rect, false);
+            }
+
+            cameras.ReDraw();
+        }
+
+        // -------------------------------------------------------------------------------------------------------------------------------
 
 
         public ColorMap heatMap = ColorMap.GetColorMap(ColorMapDefaults.Jet);
@@ -104,5 +142,14 @@ namespace MainForm
         {
             heat.UpdateInternalImage(h, heatMap); ;
         }
+
+        // -------------------------------------------------------------------------------------------------------------------------------
+
+        public void PlanUpdate(FxMatrixF p)
+        {
+            plan.UpdateInternalImage(p, planMap);
+        }
+
+        // -------------------------------------------------------------------------------------------------------------------------------
     }
 }

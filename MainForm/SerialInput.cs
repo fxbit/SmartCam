@@ -156,7 +156,15 @@ namespace MainForm
             uiconsole.WriteLine("Serial Connected");
         }
 
-
+        public void Stop()
+        {
+            if(readThread!=null)
+            {
+                _continue = false;
+                serialPort.Close();
+                readThread.Abort();
+            }
+        }
 
 
         #region Read thread

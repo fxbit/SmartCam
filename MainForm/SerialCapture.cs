@@ -32,6 +32,8 @@ namespace MainForm
 
         public event EventHandler onUpdatedCameras = null;
 
+        // -------------------------------------------------------------------------------------------------------------------------------
+
         public SerialCapture()
         {
             InitializeComponent();
@@ -43,9 +45,8 @@ namespace MainForm
             // Load default configurations
             LoadConfigurations();
         }
-
-
-
+        
+        // -------------------------------------------------------------------------------------------------------------------------------
 
         #region Add/Remove
         private void toolStripButton_plus_Click(object sender, EventArgs e)
@@ -56,6 +57,8 @@ namespace MainForm
             osf.Dispose();
         }
 
+        // -------------------------------------------------------------------------------------------------------------------------------
+        
         void osf_SerialSelected(OpenSerialForm.SerialSelectedEventArgs e)
         {
             var cam = new Cameras(e.Port, e.Rate)
@@ -67,12 +70,15 @@ namespace MainForm
             AddCamera(cam);
         }
 
+        // -------------------------------------------------------------------------------------------------------------------------------
+
         private void AddCamera(Cameras cam)
         {
             listBox1.Items.Add(cam);
 
             // Start the streaming
             cam.Start();
+
 
             if (onUpdatedCameras != null)
                 onUpdatedCameras(this, new EventArgs());
@@ -82,6 +88,7 @@ namespace MainForm
             {
                 var imageMaskView = new ImageElement(imageMask.ToFxMatrixF(), imageMaskColorMap);
                 imageMaskView.Position = new FxMaths.Vector.FxVector2f(0, NewImagePosition);
+                imageMaskView.lockMoving = true;
                 NewImagePosition += imageMaskView.Size.Y + 10f /* Offset */;
                 canvas1.AddElement(imageMaskView, false);
                 imageMaskViews.Add(cam, imageMaskView);
@@ -90,13 +97,19 @@ namespace MainForm
                 var imageView = new ImageElement(imageMask.ToFxMatrixF(), imageMaskColorMap);
                 imageView._Position.x = imageMaskView.Position.X + imageMaskView.Size.X + 10f  /* Offset */;
                 imageView._Position.Y = imageMaskView.Position.Y;
+                imageView.lockMoving = true;
                 canvas1.AddElement(imageView, false);
                 imageViews.Add(cam, imageView);
 
                 canvas1.FitView();
                 canvas1.ReDraw();
             }
+
+            // Camera 
+            cam.onImageRecv += cam_onImageRecv;
         }
+
+        // -------------------------------------------------------------------------------------------------------------------------------
 
         private void toolStripButton_minus_Click(object sender, EventArgs e)
         {
@@ -107,25 +120,21 @@ namespace MainForm
 
 
                 listBox1.Items.Remove(listBox1.SelectedItem);
-
-
+                
                 if (onUpdatedCameras != null)
                     onUpdatedCameras(this, new EventArgs());
-
-
+                
                 // Remove the old image viewers
                 try
                 {
                     var maskView = imageMaskViews[c];
                     imageMaskViews.Remove(c);
                     canvas1.RemoveElement(maskView, false);
-
-
+                    
                     var view = imageViews[c];
                     imageViews.Remove(c);
                     canvas1.RemoveElement(view, false);
-
-
+                    
                     canvas1.FitView();
                     canvas1.ReDraw();
                 }
@@ -134,29 +143,13 @@ namespace MainForm
                     System.Diagnostics.Trace.WriteLine(ex.Message);
                 }
             }
-        } 
+        }
         #endregion
 
-
+        // -------------------------------------------------------------------------------------------------------------------------------
 
         #region Properties
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (listBox1.SelectedItem != null)
-            {
-                propertyGrid1.SelectedObject = listBox1.SelectedItem;
 
-
-                foreach(Cameras cam in listBox1.Items)
-                {
-                    cam.onImageRecv -= cam_onImageRecv;
-                }
-
-
-                Cameras c = (Cameras)listBox1.SelectedItem;
-                c.onImageRecv += cam_onImageRecv;
-            }
-        }
         private void propertyGrid1_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
             listBox1.Refresh();
@@ -168,9 +161,10 @@ namespace MainForm
             if (onUpdatedCameras != null)
                 onUpdatedCameras(this, new EventArgs());
         }
+
         #endregion
 
-
+        // -------------------------------------------------------------------------------------------------------------------------------
 
         #region Save/Load
 
@@ -181,6 +175,8 @@ namespace MainForm
             var str = JsonConvert.SerializeObject(list);
             File.WriteAllText(FileName, str);
         }
+
+        // -------------------------------------------------------------------------------------------------------------------------------
 
         private void LoadConfigurations()
         {
@@ -197,7 +193,7 @@ namespace MainForm
 
         #endregion
 
-
+        // -------------------------------------------------------------------------------------------------------------------------------
 
         void cam_onImageRecv(object sender, EventArgs e)
         {
@@ -223,9 +219,8 @@ namespace MainForm
             canvas1.ReDraw();
         }
 
-
-
-
+        // -------------------------------------------------------------------------------------------------------------------------------
+        
         public void Stop()
         {
             foreach(Cameras c in listBox1.Items)
@@ -233,12 +228,8 @@ namespace MainForm
                 c.Stop();
             }
         }
-
-        private void SerialCapture_Load(object sender, EventArgs e)
-        {
-
-        }
-
+        
+        // -------------------------------------------------------------------------------------------------------------------------------
 
         public List<SmartCam.Camera> GetCameras()
         {
@@ -262,5 +253,8 @@ namespace MainForm
 
             return cameras;
         }
+
+        // -------------------------------------------------------------------------------------------------------------------------------
+
     }
 }

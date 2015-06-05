@@ -1,0 +1,15 @@
+[
+  {
+    "CameraName": "Isodos (Cam2)",
+    "FPS": 0.0,
+    "Port": "COM4",
+    "Position": "510, 150",
+    "Rate": 921600,
+    "Size": "50, 50"
+  },
+  { "CameraName": "Cam 1", "Port": "COM1", "Rate": 921600, "Position": "400, 150", "Size": "50, 50", "FPS": 0.0 },
+  { "CameraName": "Cam 3", "Port": "COM1", "Rate": 921600, "Position": "300, 150", "Size": "50, 50", "FPS": 0.0 },
+  { "CameraName": "Cam 4", "Port": "COM1", "Rate": 921600, "Position": "300, 210", "Size": "50, 50", "FPS": 0.0 },
+  { "CameraName": "Cam 5", "Port": "COM1", "Rate": 921600, "Position": "400, 210", "Size": "50, 50", "FPS": 0.0 },
+  { "CameraName": "Cam 6", "Port": "COM1", "Rate": 921600, "Position": "510, 210", "Size": "50, 50", "FPS": 0.0 }
+]

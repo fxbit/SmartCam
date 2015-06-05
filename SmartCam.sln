@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainForm", "MainForm\MainForm.csproj", "{9C7462CC-459F-4107-AA81-D707B075ACFF}"
 EndProject
@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCam", "SmartCam\SmartC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleForm", "ExampleForm\ExampleForm.csproj", "{606BF96F-0500-4727-AD68-8E5865F9D512}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FxMaths", "..\..\FxGraphicsEngine\FxMath\FxMaths\FxMaths.csproj", "{4191B0A0-0064-4673-9FEE-A33B70E3D3F0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FxMaths", "..\..\MyProjects\FxGraphicsEngine\FxMath\FxMaths\FxMaths.csproj", "{4191B0A0-0064-4673-9FEE-A33B70E3D3F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

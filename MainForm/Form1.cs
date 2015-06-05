@@ -269,8 +269,8 @@ namespace MainForm
 
         #endregion
 
-
-
+        // -------------------------------------------------------------------------------------------------------------------------------
+        // clean resource when we close form 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (peopleSimulation != null)
@@ -278,10 +278,13 @@ namespace MainForm
 
             if (UISerialCapture != null)
                 UISerialCapture.Stop();
+
+            if (UISerialInput != null)
+                UISerialInput.Stop();
         }
 
-
-
+        // -------------------------------------------------------------------------------------------------------------------------------
+        // Simulation start 
         private void simulationToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -291,5 +294,14 @@ namespace MainForm
             peopleSimulation = new PeopleSimulation(10, new FxVector2f(560, 145), new FxVector2f(-1, 0), katopsi);
             peopleSimulation.Start(peopleRefreshCB);
         }
+
+        // -------------------------------------------------------------------------------------------------------------------------------
+        // Refresh the people overview -> camera informations
+        private void refreshPeopleOverviewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // The first things that we need to update is the camera overview
+            UIPeopleOverview.CamerasUpdate(UISerialCapture.GetCameras());
+        }
+        // -------------------------------------------------------------------------------------------------------------------------------
     }
 }

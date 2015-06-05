@@ -55,7 +55,6 @@ namespace MainForm
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.Name = "PeopleOverview";
             this.Text = "PeopleOverview";
-            this.Load += new System.EventHandler(this.PeopleOverview_Load);
             this.ResumeLayout(false);
 
         }
