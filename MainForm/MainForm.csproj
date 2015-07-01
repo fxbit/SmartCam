@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FxMaths, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalDlls\FxMaths.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -144,10 +148,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\FxGraphicsEngine\FxMath\FxMaths\FxMaths.csproj">
-      <Project>{4191b0a0-0064-4673-9fee-a33b70e3d3f0}</Project>
-      <Name>FxMaths</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SmartCam\SmartCam\SmartCam.csproj">
       <Project>{d3cff525-4a70-401d-a5f7-467a2f0e8bf3}</Project>
       <Name>SmartCam</Name>

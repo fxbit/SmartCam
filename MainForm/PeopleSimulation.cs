@@ -61,22 +61,24 @@ namespace MainForm
         private void SimulationRun()
         {
             int dt_ms = 100;
-            int newPersonCounter = 0;
             FxVector2f filded = new FxVector2f();
             while (simulationRun)
             {
                 // if we can add people add them
                 if (PersonList.Count < _peopleNum)
                 {
-                    newPersonCounter++;
-                    if (newPersonCounter > 10)
+                    if (rand.NextDouble() > 0.9f)
                     {
                         int numOfNewPersons = rand.Next(_peopleNum / 10) + 1;
                         for (int i = 0; i < numOfNewPersons; i++)
                             PersonList.Add(new Person(EntrancePosition, EntranceDirection, 4.0f * rand.Next(1000) / 1000.0f + 1.0f));
-
-                        newPersonCounter = 0;
                     }
+                }
+
+                // Random remove user
+                if (rand.NextDouble() > 0.99f)
+                {
+                    PersonList.RemoveAt(rand.Next(PersonList.Count));
                 }
 
                 // move the blobs in random directions
@@ -123,8 +125,10 @@ namespace MainForm
                     person.Speed *= speedChange;
 
                     // limit the max speed
-                    if (person.Speed > 4f)
-                        person.Speed = 4;
+                    if (person.Speed > 5f)
+                        person.Speed = 5f;
+                    if (person.Speed < 1.5f)
+                        person.Speed = 1.5f;
 
                     // rotate the direction
                     person.Direction.Rotation(directionAngleChange);
