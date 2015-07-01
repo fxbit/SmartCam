@@ -14,7 +14,7 @@ namespace SmartCam
         public PointF Position;
         public PointF Direction;
         public List<PointF> Path = new List<PointF>();
-
+        public Guid CameraGuid; // the camera that detected this person last time
 
         public void UpdatePerson(Person p)
         {
@@ -23,6 +23,9 @@ namespace SmartCam
             {
                 // Update the path by accumulate the path
                 Path.Add(p.Position);
+
+                // Update the camera Guid
+                CameraGuid = p.CameraGuid;
             }
         }
     }

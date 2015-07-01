@@ -53,7 +53,8 @@ namespace MainForm
 
 
         public static SmartCam.SmartCamClient smartCamClient;
-        public static Image PlanImage;
+        public static Bitmap PlanImage;
+        public static FxImages planFxImage;
         public static String ShopName;
 
         #region Form
@@ -81,39 +82,60 @@ namespace MainForm
             // Init Serial debugiing
             UISerialInput = new SerialInput();
             UISerialInput.Show(dockPanel1, DockState.Document);
-            
+
 
             // Init serial Capture menu
             UISerialCapture = new SerialCapture();
             UISerialCapture.Show(dockPanel1, DockState.Document);
             UISerialCapture.onUpdatedCameras += UISerialCapture_UpdatedCameras;
-            
+
 
             // Init client connection
             smartCamClient = new SmartCamClient("localhost");
             smartCamClient.Connect();
 
-
-
-
+            
             // Send the event to server
             ShopName = "Unisol 1";
-            PlanImage = new Bitmap("Katopsi.jpg");
-            smartCamClient.SendShop(new Shop()
-                {
-                    Name = ShopName,
-                    Plan = PlanImage,
-                    Cameras = UISerialCapture.GetCameras()
-                }, false);
-        }
+            PlanImage = new System.Drawing.Bitmap(katopsi.Width, katopsi.Height);
+            planFxImage = FxMaths.Images.FxTools.FxImages_safe_constructors(PlanImage);
+            FxMatrixF newKatopsi = MainForm.katopsi.Copy();
+            var cams = MainForm.UISerialCapture.GetCameras();
+            foreach (var cam in cams)
+            {
+                newKatopsi.DrawRect(new FxMaths.Vector.FxVector2f(cam.Center.X - cam.Size.Width / 2, cam.Center.Y - cam.Size.Height / 2),
+                    new FxVector2f(cam.Size.Width, cam.Size.Height), 0.3f);
+            }
+            UIPeopleOverview.UpdateKatopsi(newKatopsi);
+            planFxImage.Load(newKatopsi, ColorMap.GetColorMap(ColorMapDefaults.Bones));
 
-        void UISerialCapture_UpdatedCameras(object sender, EventArgs e)
-        {
             smartCamClient.SendShop(new Shop()
             {
                 Name = ShopName,
                 Plan = PlanImage,
-                Cameras = UISerialCapture.GetCameras()
+                Cameras = UISerialCapture.GetCameras().ToDictionary<Camera, Guid>(c => c.Guid)
+            }, false);
+        }
+
+        void UISerialCapture_UpdatedCameras(object sender, EventArgs e)
+        {
+
+            FxMatrixF newKatopsi = MainForm.katopsi.Copy();
+            var cams = MainForm.UISerialCapture.GetCameras();
+            foreach (var cam in cams)
+            {
+                newKatopsi.DrawRect(new FxMaths.Vector.FxVector2f(cam.Center.X - cam.Size.Width / 2, cam.Center.Y - cam.Size.Height / 2),
+                    new FxVector2f(cam.Size.Width, cam.Size.Height), 0.3f);
+            }
+            UIPeopleOverview.UpdateKatopsi(newKatopsi);
+            planFxImage.Load(newKatopsi, ColorMap.GetColorMap(ColorMapDefaults.Bones));
+
+
+            smartCamClient.SendShop(new Shop()
+            {
+                Name = ShopName,
+                Plan = PlanImage,
+                Cameras = cams.ToDictionary<Camera, Guid>(c => c.Guid)
             }, true);
         }
 
@@ -188,6 +210,7 @@ namespace MainForm
         ColorMap heatColorMap = new ColorMap(ColorMapDefaults.Jet);
         private void peopleRefreshCB(PeopleSimulation ps)
         {
+            var cameras = UISerialCapture.GetCameras();
 
             /* now we must update People Overview */
             if (UIPeopleOverview != null)
@@ -233,11 +256,15 @@ namespace MainForm
                 {
                     Guid = p.Guid,
                     Direction = new PointF(p.Direction.x, p.Direction.y),
-                    Position = new PointF(p.Position.x, p.Position.y)
+                    Position = new PointF(p.Position.x, p.Position.y),
+                    CameraGuid = cameras
+                                    .Where(x => x.Rect.Contains(new Point((int)p.Position.x, (int)p.Position.y)))
+                                    .Select(y => y.Guid)
+                                    .FirstOrDefault()
                 });
             }
             smartCamClient.SendListPersons(listPersons);
-            
+
         }
 
         #endregion

@@ -21,6 +21,7 @@ namespace MainForm
     {
         GeometryPlotElement gpe;
         ImageElement heat;
+        ImageElement ie;
 
         public PeopleOverview()
         {
@@ -38,7 +39,7 @@ namespace MainForm
             InitializeComponent();
 
             // add building 
-            ImageElement ie = new ImageElement(im, new ColorMap(ColorMapDefaults.Bones));
+            ie = new ImageElement(im, ColorMap.GetColorMap(ColorMapDefaults.Bones));
             ie.Name = "Katopsi";
             ie.lockMoving = true;
             canvas1.AddElement(ie);
@@ -51,7 +52,7 @@ namespace MainForm
 
 
             // Add heat map
-            heat = new ImageElement(im, new ColorMap(ColorMapDefaults.Jet));
+            heat = new ImageElement(im, ColorMap.GetColorMap(ColorMapDefaults.Jet));
             heat.Name = "Heat";
             heat.lockMoving = true;
             heat.Position = new FxMaths.Vector.FxVector2f(0, ie.Size.y);
@@ -63,6 +64,11 @@ namespace MainForm
         private void PeopleOverview_Load(object sender, EventArgs e)
         {
 
+        }
+        
+        internal void UpdateKatopsi(FxMatrixF newKatopsi)
+        {
+            ie.UpdateInternalImage(newKatopsi, ColorMap.GetColorMap(ColorMapDefaults.Bones));
         }
 
         public void PeopleUpdate(List<Person> personsList)
@@ -93,7 +99,7 @@ namespace MainForm
         }
 
 
-        public ColorMap heatMap = new ColorMap(ColorMapDefaults.Jet);
+        public ColorMap heatMap = ColorMap.GetColorMap(ColorMapDefaults.Jet);
         public void HeatMapUpdate(FxMatrixF h)
         {
             heat.UpdateInternalImage(h, heatMap); ;

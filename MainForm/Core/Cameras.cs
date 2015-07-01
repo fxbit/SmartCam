@@ -21,15 +21,25 @@ namespace MainForm.Core
     {
 
         #region Public configurations
+        // ---------------------------
+        public Guid Guid { get { return _guid; } }
+        private Guid _guid;
+        // ---------------------------
         public String CameraName { get; set; }
         private String _port;
+        // ---------------------------
         public String Port { get { return _port; } }
         private int _rate;
+        // ---------------------------
         public int Rate { get { return _rate; } }
         public Point Position { get; set; }
         public Size Size { get; set; }
         private float _fps;
         public float FPS { get { return _fps; } }
+        // ---------------------------
+        public Boolean IsRunning { get { return _isRunning; } }
+        private Boolean _isRunning;
+        // ---------------------------
         #endregion
 
         public event EventHandler onImageRecv;
@@ -39,6 +49,8 @@ namespace MainForm.Core
             _port = Port;
             _rate = Rate;
             _fps = 0.0f;
+            _guid = Guid.NewGuid();
+            _isRunning = false;
         }
 
 
@@ -109,12 +121,14 @@ namespace MainForm.Core
             {
                 MessageBox.Show(ex.Message);
                 _continue = false;
+                _isRunning = false;
                 return;
             }
 
             try
             {
                 _continue = true;
+                _isRunning = true;
 
                 if (readThread == null)
                     readThread = new Thread(Read);
@@ -153,6 +167,12 @@ namespace MainForm.Core
                 fpsCount = 0;
                 watch.Reset();
                 watch.Start();
+
+                // We haven't recv any actual data
+                if (_fps == 0)
+                {
+                    _isRunning = false;
+                }
             };
             fpsTimer.Start();
 
@@ -162,6 +182,7 @@ namespace MainForm.Core
         public void Stop()
         {
             _continue = false;
+            _isRunning = false;
             serialPort.Close();
             if (readThread!=null)
                 readThread.Abort();

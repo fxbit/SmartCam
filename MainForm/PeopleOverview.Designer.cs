@@ -1,4 +1,7 @@
-﻿namespace MainForm
+﻿using System;
+using FxMaths.Matrix;
+
+namespace MainForm
 {
     partial class PeopleOverview
     {
@@ -60,5 +63,6 @@
         #endregion
 
         private FxMaths.GUI.Canvas canvas1;
+
     }
 }

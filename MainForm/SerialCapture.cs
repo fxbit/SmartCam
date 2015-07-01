@@ -70,7 +70,7 @@ namespace MainForm
             var cam = new Cameras(e.Port, e.Rate)
             {
                 CameraName = "Camera",
-                Position = new Point()
+                Position = new Point(),
             };
 
             listBox1.Items.Add(cam);
@@ -126,6 +126,10 @@ namespace MainForm
             typeof(ListBox).InvokeMember("RefreshItems",
                                           BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod,
                                           null, listBox1, new object[] { });
+
+            // Send event for update camera
+            if (onUpdatedCameras != null)
+                onUpdatedCameras(this, new EventArgs());
         }
         #endregion
 
@@ -202,14 +206,20 @@ namespace MainForm
         {
             var cameras = new List<SmartCam.Camera>();
 
-            foreach(Cameras cam in listBox1.Items)
+            foreach (Cameras cam in listBox1.Items)
             {
                 cameras.Add(new SmartCam.Camera()
-                    {
-                        Center = cam.Position,
-                        Name = cam.CameraName,
-                        Size = cam.Size
-                    });
+                {
+                    Center = cam.Position,
+                    Name = cam.CameraName,
+                    Size = cam.Size,
+                    Guid = cam.Guid,
+                    IsRunning = cam.IsRunning,
+                    Rect = new Rectangle((int)(cam.Position.X - cam.Size.Width / 2),
+                                         (int)(cam.Position.Y - cam.Size.Height / 2),
+                                         cam.Size.Width, cam.Size.Height)
+
+                });
             }
 
             return cameras;

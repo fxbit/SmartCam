@@ -26,7 +26,7 @@ namespace MainForm
         Thread readThread;
         SerialPort serialPort;
 
-        private Boolean isColor = true;
+        private Boolean isColor = false;
 
         private Boolean _continue = false;
         private FxMatrixMask imageMask;

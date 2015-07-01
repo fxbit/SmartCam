@@ -11,21 +11,34 @@ namespace SmartCam
     public class Camera
     {
         /// <summary>
+        /// The UID of camera
+        /// </summary>
+        public Guid Guid;
+
+        /// <summary>
         /// A friently name of the cameras
         /// </summary>
         public String Name;
-
-
+        
         /// <summary>
         /// Position of the cameras
         /// </summary>
         public PointF Center;
-
+        
         /// <summary>
         /// Size of the cameras
         /// </summary>
         public SizeF Size;
+        
+        /// <summary>
+        /// The status of the camera
+        /// </summary>
+        public Boolean IsRunning;
 
+        /// <summary>
+        /// The area that the camera cover
+        /// </summary>
+        public Rectangle Rect;
     }
 
     [Serializable]
