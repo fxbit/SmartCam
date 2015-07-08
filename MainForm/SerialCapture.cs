@@ -254,6 +254,12 @@ namespace MainForm
             return cameras;
         }
 
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedItem != null)
+                propertyGrid1.SelectedObject = listBox1.SelectedItem;
+        }
+
         // -------------------------------------------------------------------------------------------------------------------------------
 
     }
