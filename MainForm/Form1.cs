@@ -291,7 +291,7 @@ namespace MainForm
             if (peopleSimulation != null)
                 peopleSimulation.Stop();
 
-            peopleSimulation = new PeopleSimulation(10, new FxVector2f(560, 145), new FxVector2f(-1, 0), katopsi);
+            peopleSimulation = new PeopleSimulation(20, new FxVector2f(560, 145), new FxVector2f(-1, 0), katopsi);
             peopleSimulation.Start(peopleRefreshCB);
         }
 

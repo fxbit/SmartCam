@@ -76,7 +76,7 @@ namespace MainForm
                 }
 
                 // Random remove user
-                if (rand.NextDouble() > 0.99f)
+                if (rand.NextDouble() > 0.98f)
                 {
                     PersonList.RemoveAt(rand.Next(PersonList.Count));
                 }

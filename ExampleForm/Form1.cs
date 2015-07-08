@@ -52,7 +52,7 @@ namespace ExampleForm
                 listBox1.Items.Add(String.Format("Update list persons {0} for shop {1}", Shop.Persons.Count, Shop.Name));
             });
         }
-        
+
         //------------------------------------------------------------------------------------------------------------------------
 
         void SmartCam_OnNewMsg(SmartCam.MsgType msgType, Shop Shop)
@@ -85,7 +85,14 @@ namespace ExampleForm
             }
 
 
-
+            // Limit the messages to 100 to avoid any memory issues
+            listBox1.Invoke(() =>
+            {
+                while (listBox1.Items.Count > 100)
+                {
+                    listBox1.Items.RemoveAt(0);
+                }
+            });
         }
 
         //------------------------------------------------------------------------------------------------------------------------

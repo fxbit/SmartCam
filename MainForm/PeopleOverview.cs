@@ -25,10 +25,10 @@ namespace MainForm
         GeometryPlotElement cameras;
 
         ImageElement heat;
-        public ColorMap heatMap = new ColorMap(ColorMapDefaults.Jet);
+        public ColorMap heatMap = ColorMap.GetColorMap(ColorMapDefaults.Jet);
 
         ImageElement plan;
-        public ColorMap planMap = new ColorMap(ColorMapDefaults.Bones);
+        public ColorMap planMap = ColorMap.GetColorMap(ColorMapDefaults.Bones);
 
         // -------------------------------------------------------------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ namespace MainForm
             InitializeComponent();
 
             // add building 
-            plan = new ImageElement(im, new ColorMap(ColorMapDefaults.Bones));
+            plan = new ImageElement(im, planMap);
             plan.Name = "Katopsi";
             plan.lockMoving = true;
             canvas1.AddElement(plan);
@@ -73,7 +73,7 @@ namespace MainForm
             canvas1.AddElement(cameras, false);
 
             // Add heat map
-            heat = new ImageElement(im, ColorMap.GetColorMap(ColorMapDefaults.Jet));
+            heat = new ImageElement(im, heatMap);
             heat.Name = "Heat";
             heat.lockMoving = true;
             heat.Position = new FxMaths.Vector.FxVector2f(0, plan.Size.y);
@@ -82,7 +82,7 @@ namespace MainForm
         
         internal void UpdateKatopsi(FxMatrixF newKatopsi)
         {
-            plan.UpdateInternalImage(newKatopsi, ColorMap.GetColorMap(ColorMapDefaults.Bones));
+            plan.UpdateInternalImage(newKatopsi, planMap);
         }
 
         public void PeopleUpdate(List<Person> personsList)
@@ -136,8 +136,6 @@ namespace MainForm
 
         // -------------------------------------------------------------------------------------------------------------------------------
 
-
-        public ColorMap heatMap = ColorMap.GetColorMap(ColorMapDefaults.Jet);
         public void HeatMapUpdate(FxMatrixF h)
         {
             heat.UpdateInternalImage(h, heatMap); ;
