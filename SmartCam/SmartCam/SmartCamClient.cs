@@ -67,15 +67,22 @@ namespace SmartCam
             {
                 if (sock.Connected)
                 {
-                    // Send the first message
-                    FirstMsg fm = new FirstMsg();
-                    fm.Type = (Update) ? MsgType.ShopUpdate : MsgType.ShopConnected;
-                    fm.MsgSize = 0;
-                    formatter.Serialize(stream, fm);
+                    try
+                    {
+                        // Send the first message
+                        FirstMsg fm = new FirstMsg();
+                        fm.Type = (Update) ? MsgType.ShopUpdate : MsgType.ShopConnected;
+                        fm.MsgSize = 0;
+                        formatter.Serialize(stream, fm);
 
-                    // Send the Shop
-                    formatter.Serialize(stream, shop);
-
+                        // Send the Shop
+                        formatter.Serialize(stream, shop);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error:{0}",ex.Message);
+                        return false;
+                    }
                     return true;
                 }
                 else
@@ -92,16 +99,23 @@ namespace SmartCam
             {
                 if (sock.Connected)
                 {
-                    // Send the first message
-                    FirstMsg fm = new FirstMsg();
-                    fm.Type = MsgType.PersonsUpdate;
-                    fm.MsgSize = listPersons.Count;
-                    formatter.Serialize(stream, fm);
+                    try
+                    {
+                        // Send the first message
+                        FirstMsg fm = new FirstMsg();
+                        fm.Type = MsgType.PersonsUpdate;
+                        fm.MsgSize = listPersons.Count;
+                        formatter.Serialize(stream, fm);
 
-                    // Send the Shop
-                    if (listPersons.Count > 0)
-                        formatter.Serialize(stream, listPersons);
-
+                        // Send the Shop
+                        if (listPersons.Count > 0)
+                            formatter.Serialize(stream, listPersons);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error:{0}", ex.Message);
+                        return false;
+                    }
                     return true;
                 }
                 else
@@ -118,16 +132,23 @@ namespace SmartCam
             {
                 if (sock.Connected)
                 {
-                    // Send the first message
-                    FirstMsg fm = new FirstMsg();
-                    fm.Type = MsgType.CamerasUpdate;
-                    fm.MsgSize = peoples.Count;
-                    formatter.Serialize(stream, fm);
+                    try
+                    {
+                        // Send the first message
+                        FirstMsg fm = new FirstMsg();
+                        fm.Type = MsgType.CamerasUpdate;
+                        fm.MsgSize = peoples.Count;
+                        formatter.Serialize(stream, fm);
 
-                    // Send the Shop
-                    if (peoples.Count > 0)
-                        formatter.Serialize(stream, peoples);
-
+                        // Send the Shop
+                        if (peoples.Count > 0)
+                            formatter.Serialize(stream, peoples);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error:{0}", ex.Message);
+                        return false;
+                    }
                     return true;
                 }
                 else
@@ -145,15 +166,22 @@ namespace SmartCam
             {
                 if (sock.Connected)
                 {
-                    // Send the first message
-                    FirstMsg fm = new FirstMsg();
-                    fm.Type = MsgType.HeatMapUpdate;
-                    fm.MsgSize = 0;
-                    formatter.Serialize(stream, fm);
+                    try
+                    {
+                        // Send the first message
+                        FirstMsg fm = new FirstMsg();
+                        fm.Type = MsgType.HeatMapUpdate;
+                        fm.MsgSize = 0;
+                        formatter.Serialize(stream, fm);
 
-                    // Send the heatMap
-                    formatter.Serialize(stream, HeatMap);
-
+                        // Send the heatMap
+                        formatter.Serialize(stream, HeatMap);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error:{0}", ex.Message);
+                        return false;
+                    }
                     return true;
                 }
                 else

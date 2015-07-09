@@ -87,6 +87,7 @@ namespace MainForm
 
         public void PeopleUpdate(List<Person> personsList)
         {
+#if true
             // remove all the old geometry
             peoples.ClearGeometry(false);
 
@@ -94,11 +95,11 @@ namespace MainForm
             foreach (Person p in personsList)
             {
                 // simulation path
-                Path pa = new Path(p.Path);
-                peoples.AddGeometry(pa, false);
+                //Path pa = new Path(p.Path);
+                //peoples.AddGeometry(pa, false);
 
                 // with kalman
-                pa = new Path(p.PathKalman);
+                Path pa = new Path(p.PathKalman);
                 pa.LineColor = SharpDX.Color.Red;
                 pa.UseDefaultColor = false;
                 peoples.AddGeometry(pa, false);
@@ -109,13 +110,14 @@ namespace MainForm
             }
 
             peoples.ReDraw();
-            
+#endif
         }
 
         // -------------------------------------------------------------------------------------------------------------------------------
 
         public void CamerasUpdate(List<Camera> cameraList)
         {
+#if true
             // remove all the old geometry
             cameras.ClearGeometry(false);
 
@@ -132,6 +134,7 @@ namespace MainForm
             }
 
             cameras.ReDraw();
+#endif
         }
 
         // -------------------------------------------------------------------------------------------------------------------------------
