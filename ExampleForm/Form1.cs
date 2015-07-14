@@ -62,14 +62,14 @@ namespace ExampleForm
                 case MsgType.ShopConnected:
                     listBox1.Invoke(() =>
                     {
-                        listBox1.Items.Add(String.Format("New Shop ({0}) Connected with {1} cameras.", Shop.Name, Shop.Cameras.Count));
+                        listBox1.Items.Add(String.Format("New Shop ({0}) Connected with {1} cameras, Regions: {2}", Shop.Name, Shop.Cameras.Count, Shop.Regions.Count));
                         pictureBox1.BackgroundImage = Shop.Plan;
                     });
                     break;
                 case MsgType.ShopUpdate:
                     listBox1.Invoke(() =>
                     {
-                        listBox1.Items.Add(String.Format("Updated Shop ({0}) Num of Cameras: {1}", Shop.Name, Shop.Cameras.Count));
+                        listBox1.Items.Add(String.Format("Updated Shop ({0}) Num of Cameras: {1}, Regions: {2}", Shop.Name, Shop.Cameras.Count, Shop.Regions.Count));
                         pictureBox1.BackgroundImage = Shop.Plan;
                     });
                     break;

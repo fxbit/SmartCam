@@ -1,15 +1,80 @@
-[
-  {
-    "CameraName": "Isodos (Cam2)",
-    "FPS": 0.0,
-    "Port": "COM4",
-    "Position": "510, 150",
-    "Rate": 921600,
-    "Size": "50, 50"
-  },
-  { "CameraName": "Cam 1", "Port": "COM1", "Rate": 921600, "Position": "400, 150", "Size": "50, 50", "FPS": 0.0 },
-  { "CameraName": "Cam 3", "Port": "COM1", "Rate": 921600, "Position": "300, 150", "Size": "50, 50", "FPS": 0.0 },
-  { "CameraName": "Cam 4", "Port": "COM1", "Rate": 921600, "Position": "300, 210", "Size": "50, 50", "FPS": 0.0 },
-  { "CameraName": "Cam 5", "Port": "COM1", "Rate": 921600, "Position": "400, 210", "Size": "50, 50", "FPS": 0.0 },
-  { "CameraName": "Cam 6", "Port": "COM1", "Rate": 921600, "Position": "510, 210", "Size": "50, 50", "FPS": 0.0 }
-]
+{  
+   "Cameras":[  
+      {  
+         "Guid":"f323d5e3-49c1-4836-a9de-ffbd35645a2c",
+         "CameraName":"Isodos (Cam2)",
+         "Port":"COM4",
+         "Rate":921600,
+         "Position":"510, 150",
+         "Size":"50, 50",
+         "FPS":0.0,
+         "IsRunning":false
+      },
+      {  
+         "Guid":"2550f9cf-99a3-4784-9b82-6b3080006db6",
+         "CameraName":"Cam 1",
+         "Port":"COM1",
+         "Rate":921600,
+         "Position":"400, 150",
+         "Size":"50, 50",
+         "FPS":0.0,
+         "IsRunning":false
+      },
+      {  
+         "Guid":"0c439818-65de-4d2b-a6d7-158e765580df",
+         "CameraName":"Cam 3",
+         "Port":"COM1",
+         "Rate":921600,
+         "Position":"300, 150",
+         "Size":"50, 50",
+         "FPS":0.0,
+         "IsRunning":false
+      },
+      {  
+         "Guid":"bfbe73b1-b737-42e9-9d5b-96df0f999f99",
+         "CameraName":"Cam 4",
+         "Port":"COM1",
+         "Rate":921600,
+         "Position":"300, 210",
+         "Size":"50, 50",
+         "FPS":0.0,
+         "IsRunning":false
+      },
+      {  
+         "Guid":"e2217e50-e560-48c5-a664-3529b23dfb14",
+         "CameraName":"Cam 5",
+         "Port":"COM1",
+         "Rate":921600,
+         "Position":"400, 210",
+         "Size":"50, 50",
+         "FPS":0.0,
+         "IsRunning":false
+      },
+      {  
+         "Guid":"c5379977-5bcc-44ef-a62f-b980ef15c4b7",
+         "CameraName":"Cam 6",
+         "Port":"COM1",
+         "Rate":921600,
+         "Position":"510, 210",
+         "Size":"50, 50",
+         "FPS":0.0,
+         "IsRunning":false
+      }
+   ],
+   "Regions":[  
+      {  
+         "Guid":"45525f76-b37c-49ee-b175-bc49677e1197",
+         "Name":"Isodos",
+         "Center":"510, 150",
+         "Size":"100, 200",
+         "Rect":"460, 50, 100, 200"
+      },
+      {  
+         "Guid":"0c9d21e9-2f97-4133-8385-1e6a3b93eaf1",
+         "Name":"Perioxi1",
+         "Center":"400, 80",
+         "Size":"100, 100",
+         "Rect":"350, 30, 100, 100"
+      }
+   ]
+}

@@ -30,7 +30,12 @@ namespace SmartCam
         /// <summary>
         /// List with all cameras tha the shop have.
         /// </summary>
-        public Dictionary<Guid,Camera> Cameras;
+        public Dictionary<Guid, Camera> Cameras;
+
+        /// <summary>
+        /// List of all regions that exist to this specific shop
+        /// </summary>
+        public Dictionary<Guid, Region> Regions;
 
         /// <summary>
         /// List with all persons in the shop.
@@ -40,6 +45,7 @@ namespace SmartCam
         public Shop()
         {
             Cameras = new Dictionary<Guid, Camera>();
+            Regions = new Dictionary<Guid, Region>();
             Persons = new List<Person>();
         }
     }

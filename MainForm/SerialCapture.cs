@@ -32,11 +32,15 @@ namespace MainForm
 
         public event EventHandler onUpdatedCameras = null;
 
+        public List<SmartCam.Region> Regions { get; set; }
+
         // -------------------------------------------------------------------------------------------------------------------------------
 
         public SerialCapture()
         {
             InitializeComponent();
+
+            Regions = new List<SmartCam.Region>();
 
             // Init the mask and colormap
             imageMask = new FxMatrixMask(64, 64);
@@ -157,6 +161,11 @@ namespace MainForm
                                           BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod,
                                           null, listBox1, new object[] { });
 
+            listBox_regions.Refresh();
+            typeof(ListBox).InvokeMember("RefreshItems",
+                                          BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod,
+                                          null, listBox_regions, new object[] { });
+
             // Send event for update camera
             if (onUpdatedCameras != null)
                 onUpdatedCameras(this, new EventArgs());
@@ -171,8 +180,13 @@ namespace MainForm
 
         private void toolStripButton_save_Click(object sender, EventArgs e)
         {
-            var list = listBox1.Items;
-            var str = JsonConvert.SerializeObject(list);
+            SerialCfg cfg = new SerialCfg();
+            foreach (var a in listBox_regions.Items)
+                cfg.Regions.Add((SmartCam.Region)a);
+            foreach (var a in listBox1.Items)
+                cfg.Cameras.Add((Cameras)a);
+
+            var str = JsonConvert.SerializeObject(cfg);
             File.WriteAllText(FileName, str);
         }
 
@@ -180,14 +194,19 @@ namespace MainForm
 
         private void LoadConfigurations()
         {
-            if(File.Exists(FileName))
+            if (File.Exists(FileName))
             {
                 string str = File.ReadAllText(FileName);
-                var list = JsonConvert.DeserializeObject<List<Cameras>>(str);
+                var cfg = JsonConvert.DeserializeObject<SerialCfg>(str);
+
                 listBox1.Items.Clear();
-                
-                foreach (var c in list)
-                    AddCamera(c);
+                if (cfg.Cameras != null)
+                    foreach (var c in cfg.Cameras)
+                        AddCamera(c);
+
+                listBox_regions.Items.Clear();
+                if (cfg.Regions != null)
+                    listBox_regions.Items.AddRange(cfg.Regions.ToArray());
             }
         }
 
@@ -260,7 +279,48 @@ namespace MainForm
                 propertyGrid1.SelectedObject = listBox1.SelectedItem;
         }
 
+
         // -------------------------------------------------------------------------------------------------------------------------------
 
+        private void toolStripButton_AddRegion_Click(object sender, EventArgs e)
+        {
+            listBox_regions.Items.Add(new SmartCam.Region()
+            {
+                Name = "Region"
+            });
+        }
+
+        private void toolStripButton_RemoveRegions_Click(object sender, EventArgs e)
+        {
+            if (listBox_regions.SelectedItem != null)
+            {
+                listBox_regions.Items.Remove(listBox_regions.SelectedItem);
+            }
+        }
+
+        private void listBox_regions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBox_regions.SelectedItem != null)
+                propertyGrid1.SelectedObject = listBox_regions.SelectedItem;
+        }
+
+
+        public List<SmartCam.Region> GetRegions()
+        {
+            List<SmartCam.Region> result = new List<SmartCam.Region>();
+            foreach(var a in listBox_regions.Items)
+                result.Add((SmartCam.Region)a);
+            return result;
+        }
+
+        // -------------------------------------------------------------------------------------------------------------------------------
+    }
+
+
+
+    public class SerialCfg
+    {
+        public List<Cameras> Cameras = new List<Core.Cameras>();
+        public List<SmartCam.Region> Regions = new List<SmartCam.Region>();
     }
 }

@@ -113,7 +113,8 @@ namespace MainForm
             {
                 Name = ShopName,
                 Plan = PlanImage,
-                Cameras = UISerialCapture.GetCameras().ToDictionary<Camera, Guid>(c => c.Guid)
+                Cameras = UISerialCapture.GetCameras().ToDictionary<Camera, Guid>(c => c.Guid),
+                Regions = UISerialCapture.GetRegions().ToDictionary<SmartCam.Region, Guid>(c => c.Guid)
             }, false);
         }
 
@@ -127,6 +128,17 @@ namespace MainForm
                 newKatopsi.DrawRect(new FxMaths.Vector.FxVector2f(cam.Center.X - cam.Size.Width / 2, cam.Center.Y - cam.Size.Height / 2),
                     new FxVector2f(cam.Size.Width, cam.Size.Height), 0.3f);
             }
+            var regions = MainForm.UISerialCapture.GetRegions();
+            try {
+                foreach (var r in regions)
+                {
+                    newKatopsi.DrawRect(new FxMaths.Vector.FxVector2f(r.Center.X - r.Size.Width / 2, r.Center.Y - r.Size.Height / 2),
+                        new FxVector2f(r.Size.Width, r.Size.Height), 0.6f);
+                }
+            }catch(Exception ex)
+            {
+                MessageBox.Show("Error size/position of region.");
+            }
             UIPeopleOverview.UpdateKatopsi(newKatopsi);
             planFxImage.Load(newKatopsi, ColorMap.GetColorMap(ColorMapDefaults.Bones));
 
@@ -135,7 +147,8 @@ namespace MainForm
             {
                 Name = ShopName,
                 Plan = PlanImage,
-                Cameras = cams.ToDictionary<Camera, Guid>(c => c.Guid)
+                Cameras = cams.ToDictionary<Camera, Guid>(c => c.Guid),
+                Regions = regions.ToDictionary<SmartCam.Region, Guid>(c => c.Guid)
             }, true);
         }
 
@@ -211,6 +224,7 @@ namespace MainForm
         private void peopleRefreshCB(PeopleSimulation ps)
         {
             var cameras = UISerialCapture.GetCameras();
+            var regions = UISerialCapture.GetRegions();
 
             /* now we must update People Overview */
             if (UIPeopleOverview != null)
@@ -260,7 +274,11 @@ namespace MainForm
                     CameraGuid = cameras
                                     .Where(x => x.Rect.Contains(new Point((int)p.Position.x, (int)p.Position.y)))
                                     .Select(y => y.Guid)
-                                    .FirstOrDefault()
+                                    .FirstOrDefault(),
+                    RegionGuid = regions
+                                    .Where(x => x.Rect.Contains(new Point((int)p.Position.x, (int)p.Position.y)))
+                                    .Select(y => y.Guid)
+                                    .FirstOrDefault(),
                 });
             }
             smartCamClient.SendListPersons(listPersons);
